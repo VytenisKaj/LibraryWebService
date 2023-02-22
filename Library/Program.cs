@@ -12,14 +12,14 @@ namespace Library
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var server = builder.Configuration["Server"] ?? "localhost";
+            var server = builder.Configuration["Server"] ?? "db";
             var port = builder.Configuration["Port"] ?? "1433";
             var database = builder.Configuration["Database"] ?? "Library";
 
             // BAD PRACTICE, don't do this in real applications. This is only a demo application
             var user = builder.Configuration["User"] ?? "SA";
             var password = builder.Configuration["Password"] ?? "securePassw0rd";
-            var connection = $"Server={server},{port};Initial Catalog={database}; User ID ={user};Password={password};TrustServerCertificate=True";
+            var connection = $"Server={server},{port};Initial Catalog={database}; User ID ={user};Password={password};TrustServerCertificate=True;Integrated Security=false";
 
             builder.Services.AddDbContext<RepositoryContext>(options =>
                 options.UseSqlServer(connection));
@@ -28,12 +28,8 @@ namespace Library
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 

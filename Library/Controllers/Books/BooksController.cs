@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Library.Controllers.Books
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BooksController : ControllerBase
     {
 
