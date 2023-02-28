@@ -18,7 +18,7 @@ namespace Library.Controllers.Books
             _bookService = service;
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         [SwaggerOperation(Summary = "Returns all books")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
         public IActionResult GetAllBooks()
@@ -63,7 +63,7 @@ namespace Library.Controllers.Books
 
         [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Updates book with id")]
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
+        //[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
         public IActionResult UpdateBook([FromBody] BookRequest request, int id)
         {
             if (!ModelState.IsValid)
@@ -82,7 +82,8 @@ namespace Library.Controllers.Books
                 return BadRequest(bookResponse.Message);
             }
 
-            return NoContent();
+            //return NoContent();
+            return Ok(bookResponse.Book);
         }
 
         [HttpDelete("{id}")]

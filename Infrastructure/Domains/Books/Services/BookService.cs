@@ -62,7 +62,7 @@ namespace Infrastructure.Domains.Books.Services
             book.IsAvailable = updateRequest.IsAvailable;
             book.UnavailableUntil = updateRequest.UnavailableUntil;
             _bookRepository.UpdateBook();
-            return new UpdateBookResponse();
+            return new UpdateBookResponse(true, null!, true, updateRequest);
         }
     }
 }
