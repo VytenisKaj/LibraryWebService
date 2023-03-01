@@ -18,7 +18,7 @@ namespace Library.Controllers.Books
             _bookService = service;
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         [SwaggerOperation(Summary = "Returns all books")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
         public IActionResult GetAllBooks()
