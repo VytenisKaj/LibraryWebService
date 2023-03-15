@@ -31,6 +31,7 @@ namespace Infrastructure.Domains.Authors.Services
             {
                 return new DeleteAuthorResponse($"Author with id {id} doesn't exist", false);
             }
+            _authorRepository.DeleteAuthor(author);
             return new DeleteAuthorResponse();
         }
 
