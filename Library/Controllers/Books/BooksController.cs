@@ -27,7 +27,7 @@ namespace Library.Controllers.Books
         }
 
 
-        [HttpGet("{id}", Name = "GetBook")]
+        [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Returns book by id")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
         public IActionResult GetBook(int id)
@@ -48,7 +48,7 @@ namespace Library.Controllers.Books
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState.GetErrorMessages());
+                return BadRequest(ModelState);
             }
 
             var bookResponse = _bookService.CreateBook(request);
@@ -68,7 +68,7 @@ namespace Library.Controllers.Books
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState.GetErrorMessages());
+                return BadRequest(ModelState);
             }
 
             var bookResponse = _bookService.UpdateBook(id, request);

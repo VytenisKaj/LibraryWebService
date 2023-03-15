@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Infrastructure.Domains.Authors.Repositories;
 using Infrastructure.Domains.Books.Models;
 using Infrastructure.Domains.Books.Repositories;
 
@@ -7,15 +8,23 @@ namespace Infrastructure.Domains.Books.Services
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
+        private readonly IAuthorRepository _authorRepository;
         private readonly IMapper _mapper;
-        public BookService(IBookRepository bookRepository, IMapper mapper)
+        public BookService(IBookRepository bookRepository, IAuthorRepository authorRepository,  IMapper mapper)
         {
             _bookRepository = bookRepository;
+            _authorRepository = authorRepository;
             _mapper = mapper;
         }
         public CreateBookResponse CreateBook(BookRequest createRequest)
         {
+            var author = _authorRepository.GetAuthor(createRequest.AuthorId);
+            if (author == null)
+            {
+                return new CreateBookResponse($"Author with id {createRequest.AuthorId} doesn't exits");
+            }
             var book = _mapper.Map<Book>(createRequest);
+            book.Author = author;
             var newBook = _bookRepository.CreateBook(book);
             return new CreateBookResponse(newBook);
         }
@@ -43,7 +52,7 @@ namespace Infrastructure.Domains.Books.Services
             {
                 return new GetBookResponse($"Book with id {id} doesn't exits");
             }
-            return new GetBookResponse(_mapper.Map<BookRequest>(book));
+            return new GetBookResponse(_mapper.Map<BookResponse>(book));
             
         }
 
@@ -54,7 +63,13 @@ namespace Infrastructure.Domains.Books.Services
             {
                 return new UpdateBookResponse($"Book with id {id} doesn't exits", false);
             }
-            book.Author = updateRequest.Author;
+
+            var author = _authorRepository.GetAuthor(updateRequest.AuthorId);
+            if (author == null)
+            {
+                return new UpdateBookResponse($"Author with id {updateRequest.AuthorId} doesn't exits", false);
+            }
+            book.Author = author;
             book.Title = updateRequest.Title;
             book.Description = updateRequest.Description;
             book.CreatedDate = updateRequest.CreatedDate;
@@ -62,7 +77,7 @@ namespace Infrastructure.Domains.Books.Services
             book.IsAvailable = updateRequest.IsAvailable;
             book.UnavailableUntil = updateRequest.UnavailableUntil;
             _bookRepository.UpdateBook();
-            return new UpdateBookResponse();
+            return new UpdateBookResponse(updateRequest);
         }
     }
 }

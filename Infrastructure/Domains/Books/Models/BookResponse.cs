@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Domains.Books.Models
 {
-    public class BookRequest
+    public class BookResponse
     {
         [Required]
         public string Title { get; set; }
@@ -15,7 +15,7 @@ namespace Infrastructure.Domains.Books.Models
         public DateTime CreatedDate { get; set; }
 
         [Required]
-        public int AuthorId { get; set; }
+        public Author Author { get; set; }
 
         public string Description { get; set; } = string.Empty;
 

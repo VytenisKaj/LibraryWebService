@@ -1,3 +1,6 @@
+using AutoMapper;
+using Infrastructure.Domains.Authors.Repositories;
+using Infrastructure.Domains.Authors.Services;
 using Infrastructure.Domains.Books.Repositories;
 using Infrastructure.Domains.Books.Services;
 using Infrastructure.Repositories;
@@ -12,7 +15,8 @@ namespace Library
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var server = builder.Configuration["Server"] ?? "db";
+            //var server = builder.Configuration["Server"] ?? "db";
+            var server = builder.Configuration["Server"] ?? "localhost";
             var port = builder.Configuration["Port"] ?? "1433";
             var database = builder.Configuration["Database"] ?? "Library";
 
@@ -53,8 +57,12 @@ namespace Library
             });
 
             services.AddAutoMapper(typeof(Program));
+            services.AddScoped<IMapper, Mapper>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IBookService, BookService>();
+
         }
     }
 }

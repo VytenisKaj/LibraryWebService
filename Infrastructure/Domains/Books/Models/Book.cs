@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Infrastructure.Domains.Authors.Models;
 
 namespace Infrastructure.Domains.Books.Models
 {
@@ -20,7 +21,7 @@ namespace Infrastructure.Domains.Books.Models
         public DateTime CreatedDate { get; set; }
 
         [Required]
-        public string Author { get; set; }
+        public Author Author { get; set; }
 
         public string Description { get; set; } = string.Empty;
 

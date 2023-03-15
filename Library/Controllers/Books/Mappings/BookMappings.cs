@@ -3,11 +3,12 @@ using Infrastructure.Domains.Books.Models;
 
 namespace Library.Controllers.Books.Mappings
 {
-    public class BookMapping : Profile
+    public class BookMappings : Profile
     {
-        public BookMapping()
+        public BookMappings()
         {
             CreateMap<Book, BookRequest>().ReverseMap();
+            CreateMap<Book, BookResponse>().ReverseMap();
         }
     }
 }

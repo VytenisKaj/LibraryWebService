@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Domains.Books.Models;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Domains.Books.Repositories
 {
@@ -26,7 +27,7 @@ namespace Infrastructure.Domains.Books.Repositories
 
         public IEnumerable<Book> GetAllBooks()
         {
-            return _context.Books;
+            return _context.Books.Include("Author");
         }
 
         public Book? GetBook(int id)

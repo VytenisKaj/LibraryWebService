@@ -1,4 +1,5 @@
-﻿using Infrastructure.Domains.Books.Models;
+﻿using Infrastructure.Domains.Authors.Models;
+using Infrastructure.Domains.Books.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
@@ -11,5 +12,6 @@ namespace Infrastructure.Repositories
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Author> Author { get; set; }
     }
 }
