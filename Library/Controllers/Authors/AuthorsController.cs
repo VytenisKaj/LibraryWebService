@@ -48,7 +48,7 @@ namespace Library.API.Controllers.Authors
             var response = _authorService.CreateAuthor(request);
             if(!response.Success)
             {
-                return BadRequest(response.Message);
+                return BadRequest(new { message = response.Message });
             }
             return CreatedAtAction(nameof(GetAuthor), new { id = response.Author?.Id }, response.Author);
         }
@@ -69,9 +69,9 @@ namespace Library.API.Controllers.Authors
             {
                 if (!response.Found)
                 {
-                    return NotFound(response.Message);
+                    return NotFound(new { message = response.Message });
                 }
-                return BadRequest(response.Message);
+                return BadRequest(new { message = response.Message });
             }
             return Ok(response.Author);
         }
@@ -86,9 +86,9 @@ namespace Library.API.Controllers.Authors
             {
                 if (!response.Found)
                 {
-                    return NotFound(response.Message);
+                    return NotFound(new { message = response.Message });
                 }
-                return BadRequest(response.Message);
+                return BadRequest(new { message = response.Message });
             }
             return Ok();
         }

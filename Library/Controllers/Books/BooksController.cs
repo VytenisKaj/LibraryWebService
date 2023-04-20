@@ -32,13 +32,13 @@ namespace Library.Controllers.Books
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
         public IActionResult GetBook(int id)
         {
-            var bookReponse = _bookService.GetBook(id);
+            var bookResponse = _bookService.GetBook(id);
 
-            if (!bookReponse.Success)
+            if (!bookResponse.Success)
             {
-                return NotFound(bookReponse.Message);
+                return NotFound(new { message = bookResponse.Message });
             }
-            return Ok(bookReponse.Book);
+            return Ok(bookResponse.Book);
         }
 
         [HttpPost]
@@ -55,7 +55,7 @@ namespace Library.Controllers.Books
 
             if (!bookResponse.Success)
             {
-                return BadRequest(bookResponse.Message);
+                return BadRequest(new { message = bookResponse.Message });
             }
 
             return CreatedAtAction(nameof(GetBook), new { id = bookResponse.Book?.Id }, bookResponse.Book);
@@ -77,9 +77,9 @@ namespace Library.Controllers.Books
             {
                 if (!bookResponse.Found)
                 {
-                    return NotFound(bookResponse.Message);
+                    return NotFound(new { message = bookResponse.Message });
                 }
-                return BadRequest(bookResponse.Message);
+                return BadRequest(new { message = bookResponse.Message });
             }
 
             return NoContent();
@@ -96,9 +96,9 @@ namespace Library.Controllers.Books
             {
                 if (!bookResponse.Found)
                 {
-                    return NotFound(bookResponse.Message);
+                    return NotFound(new { message = bookResponse.Message });
                 }
-                return BadRequest(bookResponse.Message);
+                return BadRequest(new { message = bookResponse.Message });
             }
             return Ok();
         }
