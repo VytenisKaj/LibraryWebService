@@ -6,6 +6,7 @@ using Infrastructure.Domains.Books.Services;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json;
 
 namespace Library
 {
@@ -47,7 +48,12 @@ namespace Library
 
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
