@@ -16,7 +16,7 @@ namespace Library
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var server = builder.Configuration["Server"] ?? "db";
+            var server = builder.Configuration["Server"] ?? "localhost";
             var port = builder.Configuration["Port"] ?? "1433";
             var database = builder.Configuration["Database"] ?? "Library";
 
@@ -59,6 +59,11 @@ namespace Library
             {
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Library API", Version = "v1" });
+            });
+
+            services.AddHttpClient("UsersAPI", client =>
+            {
+                client.BaseAddress = new Uri("http://localhost:80");
             });
 
             services.AddAutoMapper(typeof(Program));

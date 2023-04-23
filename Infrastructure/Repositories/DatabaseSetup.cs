@@ -58,6 +58,7 @@ namespace Infrastructure.Repositories
                         Author = context.Author.Where(x => x.Id == 1).First(),
                         Description = "The million-copy bestselling author returns with a breathtaking thriller – now with exclusive new chapters to see how the story could have ended.",
                         IsAvailable = false,
+                        ReaderId = 1,
                         UnavailableUntil = DateTime.Now.AddMonths(2),
                         Isbn = "978-6-8858-4218-8"
                     },
@@ -70,7 +71,7 @@ namespace Infrastructure.Repositories
                         IsAvailable = true,
                         UnavailableUntil = DateTime.Now,
                         Isbn = "978-8-2204-4142-1"
-                    }); ;
+                    });
                 context.SaveChanges();
             }
         }

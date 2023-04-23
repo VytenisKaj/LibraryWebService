@@ -1,4 +1,5 @@
-﻿using Infrastructure.Domains.Authors.Models;
+﻿using Infrastructure.Attributes;
+using Infrastructure.Domains.Authors.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Domains.Books.Models
@@ -22,7 +23,11 @@ namespace Infrastructure.Domains.Books.Models
         [Required]
         public bool IsAvailable { get; set; } = true;
 
-        public DateTime UnavailableUntil { get; set; }
+        [RequiredWhenTaken]
+        public int? ReaderId { get; set; } = null;
+
+        [RequiredWhenTaken]
+        public DateTime? UnavailableUntil { get; set; } = null;
 
     }
 }

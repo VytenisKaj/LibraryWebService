@@ -1,6 +1,6 @@
 using Infrastructure.Domains.Books.Models;
 using Infrastructure.Domains.Books.Services;
-using Library.Extensions;
+using Infrastructure.Domains.Users.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -30,9 +30,9 @@ namespace Library.Controllers.Books
         [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Returns book by id")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        public IActionResult GetBook(int id)
+        public async Task<IActionResult> GetBook(int id)
         {
-            var bookResponse = _bookService.GetBook(id);
+            var bookResponse = await _bookService.GetBookAsync(id);
 
             if (!bookResponse.Success)
             {
@@ -44,14 +44,14 @@ namespace Library.Controllers.Books
         [HttpPost]
         [SwaggerOperation(Summary = "Creates new book from request")]
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
-        public IActionResult CreateBook([FromBody] BookRequest request)
+        public async Task<IActionResult> CreateBook([FromBody] BookRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var bookResponse = _bookService.CreateBook(request);
+            var bookResponse = await _bookService.CreateBookAsync(request);
 
             if (!bookResponse.Success)
             {

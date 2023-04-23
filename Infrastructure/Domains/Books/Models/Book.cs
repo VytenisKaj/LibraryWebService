@@ -28,6 +28,8 @@ namespace Infrastructure.Domains.Books.Models
         [Required]
         public bool IsAvailable { get; set; } = true;
 
+        public int? ReaderId { get; set; } = null;
+
         public DateTime UnavailableUntil { get; set; }
 
     }

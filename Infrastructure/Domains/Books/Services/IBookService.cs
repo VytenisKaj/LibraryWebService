@@ -4,9 +4,9 @@ namespace Infrastructure.Domains.Books.Services
 {
     public interface IBookService
     {
-        public CreateBookResponse CreateBook(BookRequest createRequest);
+        public Task<CreateBookResponse> CreateBookAsync(BookRequest createRequest);
 
-        public GetBookResponse GetBook(int id);
+        public Task<GetBookResponse> GetBookAsync(int id);
 
         public IEnumerable<Book> GetAllBooks();
 
