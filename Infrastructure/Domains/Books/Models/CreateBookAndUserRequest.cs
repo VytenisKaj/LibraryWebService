@@ -1,9 +1,10 @@
 ﻿using Infrastructure.Attributes;
+using Infrastructure.Domains.Users.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Domains.Books.Models
 {
-    public class BookRequest
+    public class CreateBookAndUserRequest
     {
         [Required]
         public string Title { get; set; }
@@ -19,14 +20,10 @@ namespace Infrastructure.Domains.Books.Models
 
         public string Description { get; set; } = string.Empty;
 
-        [Required]
-        public bool IsAvailable { get; set; } = true;
+        [RequiredWhenTakenCreated]
+        public UserCreateRequest? Reader { get; set; } = null;
 
-        [RequiredWhenTaken]
-        public int? ReaderId { get; set; } = null;
-
-        [RequiredWhenTaken]
+        [RequiredWhenTakenCreated]
         public DateTime? UnavailableUntil { get; set; } = null;
-
     }
 }

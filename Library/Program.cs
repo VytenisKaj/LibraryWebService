@@ -16,7 +16,7 @@ namespace Library
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var server = builder.Configuration["Server"] ?? "localhost";
+            var server = builder.Configuration["Server"] ?? "db";
             var port = builder.Configuration["Port"] ?? "1433";
             var database = builder.Configuration["Database"] ?? "Library";
 
@@ -63,7 +63,7 @@ namespace Library
 
             services.AddHttpClient("UsersAPI", client =>
             {
-                client.BaseAddress = new Uri("http://localhost:80");
+                client.BaseAddress = new Uri("http://users:80");
             });
 
             services.AddAutoMapper(typeof(Program));

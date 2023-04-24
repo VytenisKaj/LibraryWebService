@@ -3,7 +3,12 @@ using Infrastructure.Domains.Authors.Repositories;
 using Infrastructure.Domains.Books.Models;
 using Infrastructure.Domains.Books.Repositories;
 using Infrastructure.Domains.Users.Models;
+using Infrastructure.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace Infrastructure.Domains.Books.Services
 {
@@ -33,9 +38,17 @@ namespace Infrastructure.Domains.Books.Services
             if (!createRequest.IsAvailable)
             {
                 var client = _httpClientFactory.CreateClient("UsersAPI");
-                var response = await client.GetFromJsonAsync<User>($"api/Users/{book.ReaderId}");
+                try
+                {
+                    await client.GetFromJsonAsync<User>($"api/Users/{createRequest.ReaderId}");
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new CreateBookResponse(ex.Message);
+                }
+                book.ReaderId = createRequest.ReaderId;
             }
-            return new CreateBookResponse($"Remove this error");
+
             book.Author = author;
             var newBook = _bookRepository.CreateBook(book);
             return new CreateBookResponse(newBook);
@@ -76,12 +89,26 @@ namespace Infrastructure.Domains.Books.Services
             
         }
 
-        public UpdateBookResponse UpdateBook(int id, BookRequest updateRequest)
+        public async Task<UpdateBookResponse> UpdateBookAsync(int id, BookRequest updateRequest)
         {
             var book = _bookRepository.GetBook(id);
             if (book == null)
             {
                 return new UpdateBookResponse($"Book with id {id} doesn't exits", false);
+            }
+
+            if (!updateRequest.IsAvailable)
+            {
+                var client = _httpClientFactory.CreateClient("UsersAPI");
+                try
+                {
+                    await client.GetFromJsonAsync<User>($"api/Users/{updateRequest.ReaderId}");
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new UpdateBookResponse(ex.Message, true);
+                }
+                book.ReaderId = updateRequest.ReaderId;
             }
 
             var author = _authorRepository.GetAuthor(updateRequest.AuthorId);
@@ -98,6 +125,39 @@ namespace Infrastructure.Domains.Books.Services
             book.UnavailableUntil = updateRequest.UnavailableUntil ?? DateTime.Now;
             _bookRepository.UpdateBook();
             return new UpdateBookResponse(updateRequest);
+        }
+
+        public async Task<CreateBookResponse> CreateBookWithUserAsync(CreateBookAndUserRequest request)
+        {
+            var author = _authorRepository.GetAuthor(request.AuthorId);
+            if (author == null)
+            {
+                return new CreateBookResponse($"Author with id {request.AuthorId} doesn't exits");
+            }
+
+            var book = _mapper.Map<Book>(request);
+            book.IsAvailable = false;
+
+            var client = _httpClientFactory.CreateClient("UsersAPI");
+            try
+            {
+                var response = await client.PostAsync($"api/Users", new StringContent(JsonSerializer.Serialize(request.Reader), Encoding.UTF8, "application/json"));
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new CreateBookResponse(await response.GetErrorsFromHttpResponse());
+                }
+
+                book.ReaderId = response.CreatedObjectId();
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound || ex.StatusCode == HttpStatusCode.BadRequest)
+            {
+                return new CreateBookResponse(ex.Message);
+            }
+
+            book.Author = author;
+            var newBook = _bookRepository.CreateBook(book);
+            return new CreateBookResponse(newBook);
         }
     }
 }

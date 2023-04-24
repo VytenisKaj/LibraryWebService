@@ -4,15 +4,15 @@ namespace Infrastructure.Domains.Books.Services
 {
     public interface IBookService
     {
-        public Task<CreateBookResponse> CreateBookAsync(BookRequest createRequest);
+        Task<CreateBookResponse> CreateBookAsync(BookRequest createRequest);
 
-        public Task<GetBookResponse> GetBookAsync(int id);
+        Task<GetBookResponse> GetBookAsync(int id);
 
-        public IEnumerable<Book> GetAllBooks();
+        IEnumerable<Book> GetAllBooks();
 
-        public UpdateBookResponse UpdateBook(int id, BookRequest updateRequest);
+        Task<UpdateBookResponse> UpdateBookAsync(int id, BookRequest updateRequest);
 
-        public DeleteBookResponse DeleteBook(int id);
-
+        DeleteBookResponse DeleteBook(int id);
+        Task<CreateBookResponse> CreateBookWithUserAsync(CreateBookAndUserRequest request);
     }
 }

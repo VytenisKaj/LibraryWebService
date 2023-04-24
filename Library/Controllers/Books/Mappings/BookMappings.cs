@@ -9,6 +9,7 @@ namespace Library.Controllers.Books.Mappings
         {
             CreateMap<Book, BookRequest>().ReverseMap();
             CreateMap<Book, BookResponse>().ReverseMap();
+            CreateMap<Book, CreateBookAndUserRequest>().ReverseMap();
         }
     }
 }

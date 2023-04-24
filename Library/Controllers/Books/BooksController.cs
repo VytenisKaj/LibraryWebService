@@ -1,6 +1,5 @@
 using Infrastructure.Domains.Books.Models;
 using Infrastructure.Domains.Books.Services;
-using Infrastructure.Domains.Users.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -61,17 +60,38 @@ namespace Library.Controllers.Books
             return CreatedAtAction(nameof(GetBook), new { id = bookResponse.Book?.Id }, bookResponse.Book);
         }
 
-        [HttpPut("{id}")]
-        [SwaggerOperation(Summary = "Updates book with id")]
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
-        public IActionResult UpdateBook([FromBody] BookRequest request, int id)
+        [HttpPost("User")]
+        [SwaggerOperation(Summary = "Creates new book and new user from request")]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
+        public async Task<IActionResult> CreateBookAndUser([FromBody] CreateBookAndUserRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var bookResponse = _bookService.UpdateBook(id, request);
+            var bookResponse = await _bookService.CreateBookWithUserAsync(request);
+
+            if (!bookResponse.Success)
+            {
+                return BadRequest(new { message = bookResponse.Message });
+            }
+
+            return CreatedAtAction(nameof(GetBook), new { id = bookResponse.Book?.Id }, bookResponse.Book);
+        }
+
+
+        [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Updates book with id")]
+        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
+        public async Task<IActionResult> UpdateBook([FromBody] BookRequest request, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var bookResponse = await _bookService.UpdateBookAsync(id, request);
 
             if (!bookResponse.Success)
             {

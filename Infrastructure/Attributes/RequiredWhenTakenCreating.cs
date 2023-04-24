@@ -3,29 +3,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Attributes
 {
-    public class RequiredWhenTakenAttribute : ValidationAttribute
+    public class RequiredWhenTakenCreatedAttribute : ValidationAttribute
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var bookRequest = (BookRequest)validationContext.ObjectInstance;
+            var bookRequest = (CreateBookAndUserRequest)validationContext.ObjectInstance;
 
             if (bookRequest == null)
             {
                 return new ValidationResult($"Attribute cannot be used here");
             }
 
-            if (validationContext.MemberName == nameof(bookRequest.ReaderId))
+            if (validationContext.MemberName == nameof(bookRequest.Reader))
             {
-                if(!bookRequest.IsAvailable && bookRequest.ReaderId == null)
+                if (bookRequest.Reader == null)
                 {
-                    return new ValidationResult("ReaderId is required when IsAvailable is set to false.");
+                    return new ValidationResult("Reader is required when IsAvailable is set to false.");
                 }
                 return ValidationResult.Success;
             }
 
             if (validationContext.MemberName == nameof(bookRequest.UnavailableUntil))
             {
-                if (!bookRequest.IsAvailable && bookRequest.UnavailableUntil == null)
+                if (bookRequest.UnavailableUntil == null)
                 {
                     return new ValidationResult("UnavailableUntil is required when IsAvailable is set to false.");
                 }
